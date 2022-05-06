@@ -70,7 +70,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void find_user_by_username(){
+    public void find_user_by_username_happy_path(){
         User userInput = new User();
         userInput.setUsername("test");
         when(userRepo.findByUsername("test")).thenReturn(userInput);
@@ -81,7 +81,13 @@ public class UserControllerTest {
     }
 
     @Test
-    public void find_user_by_id(){
+    public void find_user_by_username_unhappy_path(){
+        ResponseEntity<User> response = userController.findByUserName("test");
+        assertEquals(404, response.getStatusCodeValue());
+    }
+
+    @Test
+    public void find_user_by_id_happy_path(){
         User userInput = new User();
         userInput.setUsername("test");
         Optional<User> optionalUserInput = Optional.of(userInput);
@@ -91,5 +97,13 @@ public class UserControllerTest {
 
         User user = response.getBody();
         assertEquals("test", user.getUsername());
+    }
+
+    @Test
+    public void find_user_by_id_unhappy_path(){
+        Long id = Long.valueOf(0);
+        ResponseEntity<User> response = userController.findById(id);
+
+        assertEquals(404, response.getStatusCodeValue());
     }
 }
